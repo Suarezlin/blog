@@ -1,2 +1,2 @@
-# book-movie
-a web application
+# blog
+flask web development learning
