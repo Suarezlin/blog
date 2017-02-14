@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block head %}
+    <style type="text/css">
+        .info {
+            position: fixed;
+            width: 262.5px;
+        }
+
+    </style>
+    <script>
+        $(function () {
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ current_user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e').text(data.email);
+                $('#na').text(data.name);
+                $('#add').text(data.address);
+                $('#in').text(data.about_me);
+                $('#da').text(data.time);
+                $('#ava').attr('src', data.avatar)
+            });
+        });
+        $(function () {
+            $('#b1').click(function () {
+                id = this.getAttribute('blog');
+                window.location.href = $SCRIPT_ROOT + '/edit/' + id
+            });
+            $('#b2').click(function () {
+                id = this.getAttribute('blog');
+                //console.log(id)
+                $.post($SCRIPT_ROOT + '/delete', {
+                    id: id
+                }, function (data, statu) {
+                    window.location.href = $SCRIPT_ROOT+'/'
+                });
+            });
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ blog.title }}</div>
+                    <div class="panel-body">{{ blog.body |safe }}</div>
+                    <div class="panel-footer"><span style="font-size: xx-small;">创建于 {{ timestamp }}</span></div>
+                </div>
+            </div>
+            <div class="col-md-3 hidden-xs">
+                <div class="panel panel-default info">
+                    <div class="panel-body">
+                        <div class="media">
+                            <div class="media-left">
+                                <a data-toggle="modal" data-target="#avatar_modal">
+                                    <img class="media-object img-rounded" src="http://localhost:5000/static/wait.gif"
+                                         alt=""
+                                         style="width: 66px" id="ava">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="na"></h4>
+                                <h4 class="media-heading">
+                                    <small id="e"></small>
+                                </h4>
+                            </div>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>个人简介：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="in"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>地址：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="add"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>注册日期：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="da"></small>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-success btn-block" id="b1" blog="{{ blog.id }}">编辑
+                        </button>
+                        <button type="button" class="btn btn-danger btn-block" id="b2" blog="{{ blog.id }}">删除
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 visible-xs">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">{{ author.email }}</div>
+                    <button type="button" class="btn btn-success btn-block" id="b1" blog="{{ blog.id }}">编辑
+                    </button>
+                    <button type="button" class="btn btn-danger btn-block" id="b2" blog="{{ blog.id }}">删除
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

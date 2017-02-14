@@ -1,0 +1,14 @@
+<p>用户您好：</p>
+
+<p>欢迎使用 Suarezlin 的博客</p>
+
+<p>请确认 {{ user.email }} 是您的邮箱</p>
+
+<p>请点击以下链接确认您的账户，如果链接打不开请粘贴到地址栏打开</p>
+
+<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">确认账户</a>
+
+<p>真诚的</p>
+<p>Suzrezlin</p>
+
+<p>注意：此邮件为系统自动发出，请勿回复</p>

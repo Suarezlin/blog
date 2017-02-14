@@ -1,0 +1,56 @@
+{% extends 'logbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script>
+    $(function () {
+        $('.btn').click(function () {
+            window.location.href=$SCRIPT_ROOT+'/';
+        });
+    });
+    $('#infoinput').click(function () {
+                var formData = new FormData();
+                formData.append('name', $('#name').val());
+                formData.append('address', $('#address').val());
+                formData.append('about_me', $('#about_me').val());
+                $.ajax({
+                    url: $SCRIPT_ROOT + '/upload',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).done(function (res, statu) {
+                    window.location.reload();
+                })
+            });
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" style="opacity: 0"></div>
+            <div class="col-md-4">
+                <h1 style="text-align: center;margin-top: 50px;margin-bottom: 30px">验证完成</h1>
+                <p style="text-align: center;margin-top: 50px;margin-bottom: 30px">您的账户已验证，请完善您的个人信息</p>
+                <div style="text-align: center">
+                    <form enctype="multipart/form-data" id="infoform">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="name" placeholder="姓名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="address" placeholder="地址">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control input-lg" id="about_me" placeholder="个人简介"
+                                      rows="10"></textarea>
+                        </div>
+                    </form>
+                    <button class="btn btn-primary btn-lg" type="button" id="infoinput">提交</button>
+                </div>
+            </div>
+            <div class="col-md-4" style="opacity: 0"></div>
+        </div>
+    </div>
+{% endblock %}

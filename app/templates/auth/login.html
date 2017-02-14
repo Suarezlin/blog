@@ -1,0 +1,51 @@
+{% extends 'logbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <script>
+            $(document).ready(function () {
+                var a = $('.btn-lg');
+                a.click(function () {
+                    $.post($SCRIPT_ROOT + '/login_auth', {
+                        email: $('#Email').val(),
+                        password: $('#Password').val()
+                    }, function (data, statu) {
+                        window.location.href=$SCRIPT_ROOT+'/'
+                    });
+                    return false;
+                })
+            });
+        </script>
+        <div class="row">
+            <span style="text-align: center"><h1 style="margin-top: 50px;margin-bottom: 30px">SuarezLin Blog</h1></span>
+            <span style="text-align: center"><h5
+                    style="margin-top: 50px;margin-bottom: 30px">欢迎来到 Suarezlin 的博客</h5></span>
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="opacity: 0"></div>
+
+            <div class="col-md-4">
+                <ul class="nav nav-tabs nav-justified" style="padding-bottom: 20px">
+                    <li><a href="/signup">注册</a></li>
+                    <li class="active"><a href="/login">登录</a></li>
+                </ul>
+                <form id="loginform" method="post">
+                    <div class="form-group">
+                        <input type="email" class="form-control input-lg" id="Email" placeholder="邮箱">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg" id="Password" placeholder="密码">
+                    </div>
+                </form>
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">登录</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" style="opacity: 0"></div>
+    </div>
+{% endblock %}

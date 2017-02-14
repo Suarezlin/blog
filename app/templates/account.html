@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block head %}
+{{super()}}
+<script>
+    function getReadList() {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/readlist',
+        dataType: "json",
+        data: {
+            "user":""
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+            num=data.num;
+            for(i=0;i<num-1;i++){
+                $('#main').clone().appendTo('.bs-docs-section')
+            }
+            dom=$('div#main')
+            for (i=0;i<num;i++){
+                $(dom[i]).find('h3').text(data.name[i]);
+                $(dom[i]).find('img').attr('src',data.pic[i]);
+                $(dom[i]).find('p.text_1').text(data.author[i]);
+                $(dom[i]).find('p.text_2').text(data.book_intro[i]);
+            }
+            $('.bs-docs-section').css('display','block')
+        }
+    });
+    return false;
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        getReadList();
+        $('.panel').mouseenter(function() {
+            $(this).removeClass('panel panel-default');
+            $(this).addClass('well')
+        });
+        $('.panel').mouseleave(function() {
+            $(this).removeClass('well')
+            $(this).addClass('panel panel-default')
+        })
+    })
+</script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="well">
+                <h3>我的资料</h3>
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-1">
+                        <p></p>
+
+                        <p>email : <strong>{{email}}</strong></p>
+
+                        <p>姓名：<strong>{{name}}</strong></p>
+
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="bs-docs-section" style="display: none">
+        <div class="row" align="center">
+            <h3>我的阅读清单</h3>
+        </div>
+        <div class="row" id="main">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="bs-component">
+            <div class="panel panel-default" style="padding-left: 19px;padding-bottom: 19px;padding-top: 19px;padding-right: 19px;">
+                <h3></h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div align="center"><img src="" alt="" width="200px" height="298px"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div><p align="center" class="text_1"></p></div>
+                        <div><p align="center" class="text_2"></p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'logbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+{% endblock %}
+{% block body %}
+    <h2 style="text-align: center">验证失败请重新验证</h2>
+{% endblock %}

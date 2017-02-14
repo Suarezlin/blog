@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block head %}
+    <style type="text/css">
+        .info {
+            position: fixed;
+            width: 262.5px;
+        }
+
+    </style>
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script>
+        $(function () {
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ current_user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e').text(data.email);
+                $('#na').text(data.name);
+                $('#add').text(data.address);
+                $('#in').text(data.about_me);
+                $('#da').text(data.time);
+                $('#ava').attr('src', data.avatar)
+            });
+        });
+        $(function () {
+            $('#b1').click(function () {
+                window.location.href = $SCRIPT_ROOT + '/write'
+            });
+            $('#b2').click(function () {
+                window.location.href = $SCRIPT_ROOT + '/write'
+            });
+            $('#b3').click(function () {
+                $.post($SCRIPT_ROOT + '/logout', {}, function (data, statu) {
+                    if (data.result == "success") {
+                        window.location.href = $SCRIPT_ROOT + '/login';
+                    }
+                });
+            });
+            $('#b4').click(function () {
+                $.post($SCRIPT_ROOT + '/logout', {}, function (data, statu) {
+                    if (data.result == "success") {
+                        window.location.href = $SCRIPT_ROOT + '/login';
+                    }
+                });
+            });
+            $('.del').click(function () {
+                id = this.getAttribute('blog');
+                //console.log(id)
+                $.post($SCRIPT_ROOT + '/delete', {
+                    id: id
+                }, function (data, statu) {
+                    $('#' + id).remove()
+                });
+            });
+            $('[aa=edit]').click(function () {
+                id = this.getAttribute('blog');
+                window.location.href = $SCRIPT_ROOT + '/edit/' + id
+            });
+            $('#infoinput').click(function () {
+                var formData = new FormData();
+                formData.append('name', $('#name').val());
+                formData.append('address', $('#address').val());
+                formData.append('about_me', $('#about_me').val());
+                $.ajax({
+                    url: $SCRIPT_ROOT + '/upload',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).done(function (res, statu) {
+                    $("#myModal").modal("hide");
+                    window.location.reload();
+                })
+            });
+            $('#avatar_submit').click(function () {
+                var formData = new FormData();
+                formData.append('avatar', $('#avatarinput')[0].files[0]);
+                $.ajax({
+                    url: $SCRIPT_ROOT + '/upload_avatar',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).done(function (res, statu) {
+                    $("#avatar_modal").modal("hide");
+                    window.location.reload();
+                })
+            })
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                {% for post in posts %}
+                    <div class="panel panel-default" id="{{ post.id }}">
+                        <div class="panel-heading">{{ post.title }}</div>
+                        <div class="panel-body cancel-p">
+                            <div>{{ post.txt|safe }}</div>
+                            <span class="label label-info">查看全文请点击查看全部</span>
+                        </div>
+                        <div class="panel-footer" style="padding-top: 5px;padding-bottom: 5px;">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <a class="btn btn-primary btn-xs"
+                                           href="/blog/{{ post.id }}"
+                                           role="button"
+                                           target="_blank">查看全部</a>
+                                        <button type="button" class="btn btn-success btn-xs" aa="edit"
+                                                blog="{{ post.id }}">编辑
+                                        </button>
+                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}">
+                                            删除
+                                        </button>
+                                    </div>
+                                    <div class="col-md-5" style="font-size: xx-small;text-align: right">
+                                        创建于 {{ timestamp[loop.index0] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if len == 0 %}
+                    <div class="panel panel-default">
+                        <div class="panel-body">还没有写过博客哦</div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-3 hidden-xs">
+                <div class="panel panel-default info">
+                    <div class="panel-body">
+                        <div class="media">
+                            <div class="media-left">
+                                <a data-toggle="modal" data-target="#avatar_modal">
+                                    <img class="media-object img-rounded" src="http://localhost:5000/static/wait.gif"
+                                         alt=""
+                                         style="width: 66px" id="ava">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="na"></h4>
+                                <h4 class="media-heading">
+                                    <small id="e"></small>
+                                </h4>
+                            </div>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>个人简介：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="in"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>地址：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="add"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>注册日期：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="da"></small>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm btn-block" id="b1">写博客</button>
+                        <button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal"
+                                data-target="#myModal">
+                            编辑资料
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm btn-block" id="b3">注销</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 visible-xs">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">{{ user.email }}</div>
+                    <button type="button" class="btn btn-primary btn-sm btn-block" id="b2">写博客</button>
+                    <button type="button" class="btn btn-danger btn-sm btn-block" id="b4">注销</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑资料</h4>
+                </div>
+                <div class="modal-body">
+                    <form enctype="multipart/form-data" id="infoform">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="name" placeholder="姓名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="address" placeholder="地址">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control input-lg" id="about_me" placeholder="个人简介"
+                                      rows="10"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="infoinput">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="avatar_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改头像</h4>
+                </div>
+                <div class="modal-body">
+                    <script>
+                        $(function () {
+                            var fileInput = document.getElementById('avatarinput');
+                            var preview = document.getElementById('preview');
+                            fileInput.addEventListener('change', function () {
+                                // 清除背景图片:
+                                preview.style.backgroundImage = '';
+                                // 检查文件是否选择:
+                                // 获取File引用:
+                                var file = fileInput.files[0];
+                                // 获取File信息:
+                                if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+                                    alert('不是有效的图片文件!');
+                                    return;
+                                }
+                                // 读取文件:
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var
+                                        data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'
+                                    preview.style.backgroundImage = 'url(' + data + ')';
+                                };
+                                // 以DataURL的形式读取文件:
+                                reader.readAsDataURL(file);
+                            });
+                        })
+                    </script>
+                    <div class="form-group">
+                        <label for="avatarinput">头像</label>
+                        <input type="file" id="avatarinput">
+                        <p class="help-block">上传你的头像，如果无需更改请不要上传</p>
+                        <div id="preview"
+                             style="border: 1px solid rgb(204, 204, 204);width: 100%;height: 200px;background-size: contain;background-repeat: no-repeat;background-position: center center"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="avatar_submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

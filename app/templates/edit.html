@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block head %}
+    <style type="text/css">
+        .info {
+            position: fixed;
+            width: 262.5px;
+        }
+
+        #editor {
+            overflow: scroll;
+            max-height: 300px
+        }
+
+    </style>
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script type="text/javascript">
+        // Close HTML Tags --------------------------------------------
+        function closeHTML(str) {
+            var arrTags = ["span", "font", "b", "u", "i", "h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "ul", "table", "div","code","pre"];
+            for (var i = 0; i < arrTags.length; i++) {
+                var intOpen = 0;
+                var intClose = 0;
+                var re = new RegExp("\\<" + arrTags[i] + "( [^\\<\\>]+|)\\>", "ig");
+                var arrMatch = str.match(re);
+                if (arrMatch != null) intOpen = arrMatch.length;
+                re = new RegExp("\\<\\/" + arrTags[i] + "\\>", "ig");
+                arrMatch = str.match(re);
+                if (arrMatch != null) intClose = arrMatch.length;
+                for (var j = 0; j < intOpen - intClose; j++) {
+                    str += "</" + arrTags[i] + ">";
+                }
+                /*for(var j=(intOpen-intClose-1);j>=0;j--){
+                 str+="</"+arrTags[i]+">";
+                 }*/
+            }
+            return str;
+        }
+    </script>
+    <script>
+        $(function () {
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ current_user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e').text(data.email);
+                $('#na').text(data.name);
+                $('#add').text(data.address);
+                $('#in').text(data.about_me);
+                $('#da').text(data.time);
+                $('#ava').attr('src', data.avatar)
+            });
+        });
+        $(function () {
+            $('#title').val('{{ blog.title }}');
+            $('.btn-primary').click(function () {
+                var data1 = CKEDITOR.instances.editor1.getData();
+                var txt = data1.substr(0, 500);
+                txt=closeHTML(txt);
+                console.log(data1);
+                $.post($SCRIPT_ROOT + '/edit_blog', {
+                    id:{{ blog.id }},
+                    title: $('#title').val(),
+                    body: data1,
+                    txt: txt
+                }, function (data, statu) {
+                    if (data.result == "success") {
+                        window.location.href = $SCRIPT_ROOT + '/blog/' + {{ blog.id }};
+                    }
+                });
+            })
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="title">标题</label>
+                            <input type="title" class="form-control" id="title" placeholder="标题">
+                        </div>
+                        <div>
+                            <label for="editor1">正文</label>
+                            <textarea name="editor1" id="editor1" rows="10" cols="80">
+                                {{ blog.body|safe }}
+                            </textarea>
+                            <script>
+                                // Replace the <textarea id="editor1"> with a CKEditor
+                                // instance, using default configuration.
+                                CKEDITOR.replace('editor1', {
+                                    height: 600
+                                });
+                            </script>
+                        </div>
+                        <div style="text-align: center">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 hidden-xs">
+                <div class="panel panel-default info">
+                    <div class="panel-body">
+                        <div class="media">
+                            <div class="media-left">
+                                <a data-toggle="modal" data-target="#avatar_modal">
+                                    <img class="media-object img-rounded" src="http://localhost:5000/static/wait.gif"
+                                         alt=""
+                                         style="width: 66px" id="ava">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="na"></h4>
+                                <h4 class="media-heading">
+                                    <small id="e"></small>
+                                </h4>
+                            </div>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>个人简介：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="in"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>地址：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="add"></small>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li>
+                                    <small><strong>注册日期：</strong></small>
+                                </li>
+                                <li>
+                                    <small id="da"></small>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-block">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 visible-xs">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">{{ user.email }}</div>
+                    <button type="button" class="btn btn-primary btn-block">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

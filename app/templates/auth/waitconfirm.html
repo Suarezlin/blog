@@ -1,0 +1,34 @@
+{% extends 'logbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script>
+        $(function () {
+            $('.btn-lg').click(function () {
+                $.post($SCRIPT_ROOT + '/confirm', {}, function (data, statu) {
+                    if (data.result == "success") {
+                        console.log('send successfully');
+                        $('p').text('一封验证邮件已发送至您的邮箱，如可没有收到请点击按钮重新发送')
+                        $('.btn').text('重新发送')
+                    }
+                });
+            })
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" style="opacity: 0"></div>
+            <div class="col-md-4">
+                <h1 style="text-align: center;margin-top: 50px;margin-bottom: 30px">确认您的邮箱</h1>
+                <p style="text-align: center;margin-top: 50px;margin-bottom: 30px">点击按钮发送验证邮件到您的邮箱{{ user.email }}</p>
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-primary btn-lg">发送</button>
+                </div>
+            </div>
+            <div class="col-md-4" style="opacity: 0"></div>
+        </div>
+    </div>
+{% endblock %}

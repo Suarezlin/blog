@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+{% block head %}
+{{super()}}
+<script>
+    function logout() {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/logout',
+        dataType: "json",
+        data: {
+            "logout": "True"
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+            if (data.result == 'success') {
+                $('#myModal').modal();
+            }
+        }
+    });
+    return false;
+    }
+</script>
+<script>
+    function islogin() {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/islogin',
+        dataType: "json",
+        data: {
+            "islogin": "islogin"
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+            if (data.result == 'not') {
+                $('#myModal').modal()
+            }
+            else {
+                console.log(data.result)
+            }
+        }
+    });
+    return false;
+    }
+</script>
+<script>
+    function ajaxform() {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/login',
+        dataType: "json",
+        data: {
+            "email": $("#email_1").val(),
+            "password": $("#password_1").val(),
+            "remember_me": $("#remember").val()
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+            if (data.result == 'success') {
+                alert('success')
+                $('#myModal').modal('hide')
+            }
+            else {
+                alert('fail')
+            }
+        }
+    });
+    return false;
+    }
+</script>
+<script>
+    function moreInformation(name) {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + 'more',
+        dataType: "json",
+        data: {
+            "name":name
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+                $('#moreModal .modal-title').text(data.name);
+                $('#moreModal .modal-body img[alt=学习之道]').attr('src',data.pic);
+                $('#moreModal .text_1').text(data.author);
+                $('#moreModal .text_2').text(data.book_intro);
+                $('#moreModal #read').attr('book',data.name);
+                $('#moreModal .btn-success').attr('id',data.name);
+                if (data.is_add=='1') {
+                    $('#moreModal .btn-success').text('已添加')
+                }
+                else{
+                    $('#moreModal .btn-success').text('添加到阅读清单')
+                }
+                $('#moreModal').modal()
+            }
+        })
+    return false;
+    }
+</script>
+<script>
+    function refresh() {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/refresh',
+        dataType: "json",
+        data: {
+            "refresh":'refresh'
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+            $('#book_1 h4').text(data.name[0]);
+            $('#book_2 h4').text(data.name[1]);
+            $('#book_3 h4').text(data.name[2]);
+            $('#book_4 h4').text(data.name[3]);
+            $('#book_1 a').attr('id',data.name[0]);
+            $('#book_2 a').attr('id',data.name[1]);
+            $('#book_3 a').attr('id',data.name[2]);
+            $('#book_4 a').attr('id',data.name[3]);
+            $('#book_1 img').attr('src',data.pic[0]);
+            $('#book_2 img').attr('src',data.pic[1]);
+            $('#book_3 img').attr('src',data.pic[2]);
+            $('#book_4 img').attr('src',data.pic[3]);
+            $('#book_1 p').text(data.book_intro[0]);
+            $('#book_2 p').text(data.book_intro[1]);
+            $('#book_3 p').text(data.book_intro[2]);
+            $('#book_4 p').text(data.book_intro[3])
+        }
+    });
+    return false;
+    }
+</script>
+<script>
+    function add(name) {
+        $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+    $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + 'addlike',
+        dataType: "json",
+        data: {
+            "name":name
+        },
+        error: function (XMLResponse) {
+            alert(XMLResponse.responseText)
+        },
+        success: function (data, textStatus) {
+                console.log('success')
+                if (data.a=='0'){
+                    $('#moreModal .btn-success').text('已添加')
+                }
+            else {
+                    $('#moreModal .btn-success').text('添加到阅读清单')
+                }
+            }
+        })
+    return false;
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        islogin()
+        $('.media').media();
+        $('#read').click(function (){
+            book_name=$(this).attr('book');
+            console.log(book_name)
+            $('#bookModal embed.pdf').attr('src','static/pdf/'+book_name+'.pdf')
+            $('#bookModal').modal()
+        });
+        $('.panel').mouseenter(function() {
+            $(this).removeClass('panel panel-default');
+            $(this).addClass('well')
+        })
+        $('.panel').mouseleave(function() {
+            $(this).removeClass('well')
+            $(this).addClass('panel panel-default')
+        })
+        $('.well').mouseleave(function() {
+            console.log('leave')
+            $(this).removeClass('well')
+            $(this).addClass('panel panel-default')
+        })
+        $('#button_logout').click(function () {
+            return logout()
+        })
+        $('#button_1').click(function () {
+            return ajaxform()
+        })
+        $('.btn-success').click(function () {
+            return moreInformation($(this).attr('id'))
+        })
+        $('.btn-material-grey-200').click(function() {
+            return refresh()
+        })
+        $('#moreModal .btn-success').click(function (){
+            return add($(this).attr('id'))
+        })
+    })
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="container">
+<div class="bs-docs-section">
+    <div class="row">
+        <div id="refresh">
+        <button type="button" class="btn btn-fab btn-material-grey-200 opensource" style="background-color:#0cce14 ; color: #eee;position:fixed;bottom: 10px;right:10px">
+            <i class="material-icons">refresh</i>
+          <div class="ripple-container"></div></button>
+    </div>
+    </div>
+<div class="row">
+    <div class="col-md-3" id="book_1">
+        <div class="bs-component">
+            <div class="panel panel-default" style="padding-left: 19px;padding-bottom: 19px;padding-top: 19px;padding-right: 19px;">
+                <h4>{{sel_book[0].name}}<br></h4>
+                <br>
+                <div align="center"><img src={{sel_book[0].pic}} alt="人类要是没有爱情就好了" width="200px" height="298px"></div>
+                <br>
+                <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;height:60px">
+                    <p>{{sel_book[0].book_intro}}</p>
+                </div>
+                <div align="center"><a id={{sel_book[0].name}} class="btn btn-raised btn-success">查看详情</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" id="book_2">
+        <div class="bs-component">
+            <div class="panel panel-default" style="padding-left: 19px;padding-bottom: 19px;padding-top: 19px;padding-right: 19px;">
+                <h4>{{sel_book[1].name}}<br></h4>
+                <br>
+                <div align="center"><img src={{sel_book[1].pic}} alt="哈利·波特与被诅咒的孩子" width="200px" height="298px"></div>
+                <br>
+                <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;height:60px">
+                    <p>{{sel_book[1].book_intro}}</p>
+                </div>
+                <div align="center"><a id={{sel_book[1].name}} class="btn btn-raised btn-success">查看详情</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" id="book_3">
+        <div class="bs-component">
+            <div class="panel panel-default" style="padding-left: 19px;padding-bottom: 19px;padding-top: 19px;padding-right: 19px;">
+                <h4>{{sel_book[2].name}}<br></h4>
+                <br>
+                <div align="center"><img src={{sel_book[2].pic}} alt="学习之道" width="200px" height="298px"></div>
+                <br>
+                <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;height:60px">
+                    <p>{{sel_book[2].book_intro}}</p>
+                </div>
+                <div align="center"><a id={{sel_book[2].name}} class="btn btn-raised btn-success">查看详情</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" id="book_4">
+        <div class="bs-component">
+            <div class="panel panel-default" style="padding-left: 19px;padding-bottom: 19px;padding-top: 19px;padding-right: 19px;">
+                <h4>{{sel_book[3].name}}<br></h4>
+                <br>
+                <div align="center"><img src={{sel_book[3].pic}} alt="学习之道" width="200px" height="298px"></div>
+                <br>
+                <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;height:60px">
+                    <p>{{sel_book[3].book_intro}}</p>
+                </div>
+                <div align="center"><a id={{sel_book[3].name}} class="btn btn-raised btn-success">查看详情</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+    </div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">登录</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="post" onSubmit="return ajaxForm()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="inputEmail" class="col-md-2 control-label">Email</label>
+
+                            <div class="col-md-10">
+                                <input type="email" class="form-control" placeholder="Email" id="email_1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-md-2 control-label">密码</label>
+
+                            <div class="col-md-10">
+                                <input type="password" class="form-control" placeholder="Password" id="password_1">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 0;">
+                            <!-- inline style is just to demo custom css to put checkbox below input above -->
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="remember"> 记住我
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default">注册</button>
+                <button type="submit" class="btn btn-primary" id="button_1">登录</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="moreModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-docs-section">
+                <div class="row">
+                <div class="col-md-6">
+                <div class="bs-component">
+                <div align="center"><img src="" alt="学习之道" width="200px" height="298px"></div>
+                    </div></div>
+                <div class="col-md-6">
+                <div><p align="center" class="text_1"></p></div>
+                <div><p align="center" class="text_2"></p></div>
+                    </div></div></div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-6 col-md-offset-6">
+                    <button id="read" book="" class="btn btn-raised">试读</button>
+                    <button id="" class="btn btn-raised btn-success">添加到阅读清单</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal" id="bookModal" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+    <div class="modal-body" align="center">
+        <embed class="pdf" width="1200" height="500" src="" /></div></div>
+
+</div>
+{% endblock %}

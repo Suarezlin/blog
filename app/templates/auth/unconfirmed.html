@@ -1,0 +1,10 @@
+{% extends 'logbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+{% endblock %}
+{% block body %}
+    <h2 style="text-align: center">您尚未验证您的账户，点击以下按钮再次发送验证邮件</h2>
+    <button class="btn btn-primary btn-lg" href="{{ url_for('auth.resend') }}" style="text-align: center">再次发送</button>
+{% endblock %}

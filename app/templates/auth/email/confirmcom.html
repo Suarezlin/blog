@@ -1,0 +1,10 @@
+{% extends 'loginbase.html' %}
+{% block head %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+{% endblock %}
+{% block body %}
+    <h2 style="text-align: center">验证完成，点击下方按钮回到首页</h2>
+    <button class="btn btn-primary btn-lg" href="/" style="text-align: center">首页</button>
+{% endblock %}
