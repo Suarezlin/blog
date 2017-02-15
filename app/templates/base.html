@@ -20,6 +20,19 @@
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
+    <style>
+{#        article{#}
+{#            background-color: #fff;#}
+{#            margin-top: 10px;#}
+{#            margin-bottom: 10px;#}
+{#            border-left-width: 20px;#}
+{#            padding-left: 20px;#}
+{#            border-top-width: 10px;#}
+{#            border-right-width: 20px;#}
+{#            border-bottom-width: 20px;#}
+{#            padding-top: 20px;#}
+{#        }#}
+    </style>
     <script>
         $(function () {
             $.post($SCRIPT_ROOT + '/get_m_num', {
@@ -49,7 +62,7 @@
     <div class="collapse navbar-collapse navbar-responsive-collapse">
         <ul class="nav navbar-nav">
             <li><a href="{{ url_for('main.index') }}"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 博客</a></li>
-            <li><a href="/message"><span class="glyphicon glyphicon-comment" aria-hidden="true"> </span>消息<span class="label label-danger" id="num"></span></a></li>
+            <li><a href="/message"><span class="glyphicon glyphicon-comment" aria-hidden="true"> </span>消息<span class="badge" id="num"></span></a></li>
             <li><a href="/discover"><span class="glyphicon glyphicon-search" aria-hidden="true"> </span>发现</a></li>
             <li><a href="/user/{{ current_user.email }}"><span class="glyphicon glyphicon-user" aria-hidden="true"> </span>我的资料</a></li>
         </ul>

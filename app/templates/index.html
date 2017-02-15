@@ -98,34 +98,32 @@
         <div class="row">
             <div class="col-md-9">
                 {% for post in posts %}
-                    <div class="panel panel-default" id="{{ post.id }}">
-                        <div class="panel-heading">{{ post.title }}</div>
-                        <div class="panel-body cancel-p">
-                            <div>{{ post.txt|safe }}</div>
-                            <span class="label label-info">查看全文请点击查看全部</span>
+                    <div class="well" id="{{ post.id }}" style="height: 335px">
+                    <h1>{{ post.title }}</h1>
+                        <div style="height: 200px">
+                            <div style="font-size: 18px;padding-top: 40px;">{{ post.txt|safe }}</div>
                         </div>
-                        <div class="panel-footer" style="padding-top: 5px;padding-bottom: 5px;">
+                        <div>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <a class="btn btn-primary btn-xs"
                                            href="/blog/{{ post.id }}"
                                            role="button"
-                                           target="_blank">查看全部</a>
-                                        <button type="button" class="btn btn-success btn-xs" aa="edit"
+                                           target="_blank" style="position: relative;top: -280px;left: 765px;">全部</a>
+                                        <button type="button" class="btn btn-success btn-xs" aa="edit" style="position: relative;top: -250px;left: 725px;"
                                                 blog="{{ post.id }}">编辑
                                         </button>
-                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}">
+                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}" style="position: relative;top: -220px;left: 685px;">
                                             删除
                                         </button>
                                     </div>
-                                    <div class="col-md-5" style="font-size: xx-small;text-align: right">
+                                    <div class="col-md-5" style="font-size: xx-small;position: relative;top: 20px;left: 405px;">
                                         创建于 {{ timestamp[loop.index0] }}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </div></div>
                 {% endfor %}
                 {% if len == 0 %}
                     <div class="panel panel-default">

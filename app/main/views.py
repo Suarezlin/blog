@@ -8,7 +8,18 @@ from flask_login import login_required, current_user
 import time
 import datetime
 import random
+from snownlp import SnowNLP
 
+def strip_tags(html):
+    from html.parser import HTMLParser
+    html = html.strip()
+    html = html.strip("\n")
+    result = []
+    parser = HTMLParser()
+    parser.handle_data = result.append
+    parser.feed(html)
+    parser.close()
+    return ''.join(result)
 
 @main.route('/')
 @login_required
@@ -108,6 +119,7 @@ def edit_blog():
     body = request.form.get('body', None)
     blog = Text.query.filter_by(id=id).first()
     txt = request.form.get('txt', None)
+    txt=strip_tags(txt)
     if current_user.id != blog.author.id:
         abort(403)
     if blog is None:
