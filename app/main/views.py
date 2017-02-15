@@ -175,7 +175,7 @@ def getinfo():
         abort(404)
     else:
         if user.real_avatar is not None:
-            avatar = 'http://localhost:5000/static/avatar/' + user.real_avatar
+            avatar = '/static/avatar/' + user.real_avatar
         else:
             avatar = user.gravatar()
         time = utc2local(user.member_since).strftime('%Y-%m-%d')
