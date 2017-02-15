@@ -207,7 +207,7 @@ def get_this_blog():
             title.append(blog.title)
             txt.append(blog.txt)
             time.append(utc2local(blog.timestamp).strftime('%Y-%m-%d'))
-            url.append('http://localhost:5000/blog/' + str(blog.id))
+            url.append('blog/' + str(blog.id))
             id.append(blog.id)
         return jsonify(title=title, time=time, txt=txt, url=url, id=id)
 
@@ -258,7 +258,7 @@ def get_following():
             email.append(it.email)
             text.append(it.about_me[0:100])
             if it.real_avatar is not None:
-                a = 'http://localhost:5000/static/avatar/' + it.real_avatar
+                a = '/static/avatar/' + it.real_avatar
             else:
                 a = it.gravatar()
             avatar.append(a)
@@ -291,7 +291,7 @@ def get_follower():
             email.append(it.email)
             text.append(it.about_me[0:100])
             if it.real_avatar is not None:
-                a = 'http://localhost:5000/static/avatar/' + it.real_avatar
+                a = '/static/avatar/' + it.real_avatar
             else:
                 a = it.gravatar()
             avatar.append(a)
