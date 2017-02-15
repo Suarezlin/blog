@@ -8,7 +8,6 @@ from flask_login import login_required, current_user
 import time
 import datetime
 import random
-from snownlp import SnowNLP
 
 def strip_tags(html):
     from html.parser import HTMLParser
