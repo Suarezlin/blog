@@ -207,7 +207,7 @@ def get_this_blog():
             title.append(blog.title)
             txt.append(blog.txt)
             time.append(utc2local(blog.timestamp).strftime('%Y-%m-%d'))
-            url.append('blog/' + str(blog.id))
+            url.append('/blog/' + str(blog.id))
             id.append(blog.id)
         return jsonify(title=title, time=time, txt=txt, url=url, id=id)
 
