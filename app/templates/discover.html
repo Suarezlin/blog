@@ -98,7 +98,7 @@
                 $blogs_num = $blogs_num + 10;
                 var posts = new Array();
                 for (var i in data.id) {
-                    posts.push('<div class="panel panel-default"> <div class="panel-heading">' + data.title[i] + '</div> <div class="panel-body cancel-p"> <div>' + data.txt[i] + '</div> <span class="label label-info">查看全文请点击查看全部</span> </div> <div class="panel-footer" style="padding-top: 5px;padding-bottom: 5px;"> <div class="container"> <div class="row"> <div class="col-md-3"> <a class="btn btn-primary btn-xs" href="http://localhost:5000/blog/' + data.id[i] + '" role="button" target="_blank">查看全部</a> </div> <div class="col-md-5" style="font-size: xx-small;text-align: right"> 作者： ' + data.author[i] + ' </div> </div> </div></div></div>');
+                    posts.push('<div class="well" style="height: 335px"><h1>' + data.title[i] + '</h1> <div style="height: 200px"> <div style="font-size: 18px;padding-top: 40px;">' + data.txt[i] + '</div> </div> <div class="container"> <div class="row"> <div class="col-md-3"> <a class="btn btn-primary btn-xs" href="/blog/' + data.id[i] + 'role="button" target="_blank" style="position: relative;top: -280px;left: 765px;">全部</a> </div> <div class="col-md-5"style="font-size: xx-small;position: relative;top: 20px;left: 405px;">' + data.author[i] + ' </div> </div> </div></div></div>');
                 }
                 for (var j in posts) {
                     body.append(posts[j]);
@@ -115,7 +115,7 @@
                     $blogs_num = $blogs_num + 10;
                     var posts = new Array();
                     for (var i in data.id) {
-                        posts.push('<div class="panel panel-default"> <div class="panel-heading">' + data.title[i] + '</div> <div class="panel-body cancel-p"> <div>' + data.txt[i] + '</div> <span class="label label-info">查看全文请点击查看全部</span> </div> <div class="panel-footer" style="padding-top: 5px;padding-bottom: 5px;"> <div class="container"> <div class="row"> <div class="col-md-3"> <a class="btn btn-primary btn-xs" href="http://localhost:5000/blog/' + data.id[i] + '" role="button" target="_blank">查看全部</a> </div> <div class="col-md-5" style="font-size: xx-small;text-align: right"> 作者： ' + data.author[i] + ' </div> </div> </div></div></div>');
+                        posts.push('<div class="well" style="height: 335px"><h1>' + data.title[i] + '</h1> <div style="height: 200px"> <div style="font-size: 18px;padding-top: 40px;">' + data.txt[i] + '</div> </div> <div class="container"> <div class="row"> <div class="col-md-3"> <a class="btn btn-primary btn-xs" href="/blog/' + data.id[i] + 'role="button" target="_blank" style="position: relative;top: -280px;left: 765px;">全部</a> </div> <div class="col-md-5"style="font-size: xx-small;position: relative;top: 20px;left: 405px;">' + data.author[i] + ' </div> </div> </div></div></div>');
                     }
                     for (var j in posts) {
                         body.append(posts[j]);

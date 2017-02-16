@@ -99,7 +99,7 @@
             <div class="col-md-9">
                 {% for post in posts %}
                     <div class="well" id="{{ post.id }}" style="height: 335px">
-                    <h1>{{ post.title }}</h1>
+                        <h1>{{ post.title }}</h1>
                         <div style="height: 200px">
                             <div style="font-size: 18px;padding-top: 40px;">{{ post.txt|safe }}</div>
                         </div>
@@ -111,19 +111,23 @@
                                            href="/blog/{{ post.id }}"
                                            role="button"
                                            target="_blank" style="position: relative;top: -280px;left: 765px;">全部</a>
-                                        <button type="button" class="btn btn-success btn-xs" aa="edit" style="position: relative;top: -250px;left: 725px;"
+                                        <button type="button" class="btn btn-success btn-xs" aa="edit"
+                                                style="position: relative;top: -250px;left: 725px;"
                                                 blog="{{ post.id }}">编辑
                                         </button>
-                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}" style="position: relative;top: -220px;left: 685px;">
+                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}"
+                                                style="position: relative;top: -220px;left: 685px;">
                                             删除
                                         </button>
                                     </div>
-                                    <div class="col-md-5" style="font-size: xx-small;position: relative;top: 20px;left: 405px;">
+                                    <div class="col-md-5"
+                                         style="font-size: xx-small;position: relative;top: 20px;left: 405px;">
                                         创建于 {{ timestamp[loop.index0] }}
                                     </div>
                                 </div>
                             </div>
-                        </div></div>
+                        </div>
+                    </div>
                 {% endfor %}
                 {% if len == 0 %}
                     <div class="panel panel-default">

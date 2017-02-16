@@ -52,7 +52,7 @@
                 var posts = new Array();
                 var indexs = new Array();
                 for (var i in data.title) {
-                    posts.push('<div><h5><i><span class="label label-info">' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</span></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
+                    posts.push('<div><h5><i><h2>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h2></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
                 }
                 for (var j in posts) {
                     body.append(posts[j]);
@@ -75,7 +75,7 @@
                     var body = $('#blog_body');
                     var posts = new Array();
                     for (var i in data.title) {
-                        posts.push('<div><h5><i><span class="label label-info">' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</span></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
+                        posts.push('<div><h5><i><h2>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h2></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
                     }
                     for (var j in posts) {
                         body.append(posts[j]);

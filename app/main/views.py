@@ -63,6 +63,7 @@ def write_blog():
     title = request.form.get('title', None)
     body = request.form.get('body', None)
     txt = request.form.get('txt', None)
+    txt = strip_tags(txt)
     blog = Text(title=title, body=body, author=current_user._get_current_object(), txt=txt)
     db.session.add(blog)
     db.session.commit()
