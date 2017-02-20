@@ -32,7 +32,7 @@
                 $.post($SCRIPT_ROOT + '/delete', {
                     id: id
                 }, function (data, statu) {
-                    window.location.href = $SCRIPT_ROOT+'/'
+                    window.location.href = $SCRIPT_ROOT + '/'
                 });
             });
         })
@@ -47,6 +47,54 @@
                     <div class="panel-body">{{ blog.body |safe }}</div>
                     <div class="panel-footer"><span style="font-size: xx-small;">创建于 {{ timestamp }}</span></div>
                 </div>
+                <script>
+                    (function () {
+                        var disqus_config = function () {
+                            // The generated payload which authenticates users with Disqus
+                            this.page.remote_auth_s3 = '{{ message }} {{ sig }} {{ t }}';
+                            this.page.api_key = '{{ key }}';
+                        };
+                    })();
+                </script>
+                <div id="disqus_thread"></div>
+                <script>
+                    /**
+                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                    /*
+                     var disqus_config = function () {
+                     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                     };
+                     */
+                    (function () { // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+                        s.src = '//suarezlin-blog.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+                    powered by Disqus.</a></noscript>
+                {#                <!-- 多说评论框 start -->#}
+                {#                <div class="ds-thread" data-thread-key="{{ current_user.id }}" data-title="{{ blog.title }}"#}
+                {#                     data-url="/blog/{{ blog.id }}"></div>#}
+                {#                <!-- 多说评论框 end -->#}
+                {#                <!-- 多说公共JS代码 start (一个网页只需插入一次) -->#}
+                {#                <script type="text/javascript">#}
+                {#                    var duoshuoQuery = {short_name: "suarezlin"};#}
+                {#                    (function () {#}
+                {#                        var ds = document.createElement('script');#}
+                {#                        ds.type = 'text/javascript';#}
+                {#                        ds.async = true;#}
+                {#                        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';#}
+                {#                        ds.charset = 'UTF-8';#}
+                {#                        (document.getElementsByTagName('head')[0]#}
+                {#                        || document.getElementsByTagName('body')[0]).appendChild(ds);#}
+                {#                    })();#}
+                {#                </script>#}
+                {#                <!-- 多说公共JS代码 end -->#}
+
             </div>
             <div class="col-md-3 hidden-xs">
                 <div class="panel panel-default info">
@@ -108,4 +156,5 @@
             </div>
         </div>
     </div>
+    <script id="dsq-count-scr" src="//suarezlin-blog.disqus.com/count.js" async></script>
 {% endblock %}

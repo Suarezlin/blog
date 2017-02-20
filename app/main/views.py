@@ -7,7 +7,12 @@ from .. import db
 from flask_login import login_required, current_user
 import time
 import datetime
-import random
+import random, requests
+import base64
+import hashlib
+import hmac
+import simplejson
+
 
 def strip_tags(html):
     from html.parser import HTMLParser
@@ -19,6 +24,7 @@ def strip_tags(html):
     parser.feed(html)
     parser.close()
     return ''.join(result)
+
 
 @main.route('/')
 @login_required
@@ -73,14 +79,35 @@ def write_blog():
 @main.route('/blog/<id>')
 @login_required
 def get_blog(id):
+    DISQUS_SECRET_KEY = 'fwKbo3J8AEzj0fvZhchEykVn0wAkaVbLJVwrSFggd2JPUzLrDjjY5QhYSusdvasE'
+    DISQUS_PUBLIC_KEY = '6ZgkIO0TrwN3WLQFBLmFcWZJTnQB6uj4Gkd6hGiBUm6IPlTprajxVdnOAbCrps6u'
     blog = Text.query.filter_by(id=id).first()
+    data = simplejson.dumps({
+        'id': current_user.id,
+        'username': current_user.name,
+        'email': current_user.email,
+        # 'avatar': 'http://127.0.0.1:5000/static/avatar/' + current_user.real_avatar,
+        # 'url': '/user/' + str(current_user.id)
+    })
+    print(len('http://127.0.0.1:5000/static/avatar/' + current_user.real_avatar))
+    message = base64.b64encode(data.encode('utf-8')).decode()
+    # generate a timestamp for signing the message
+    timestamp = int(time.time())
+
+    key = DISQUS_SECRET_KEY.encode('utf-8')
+    msg = ('%s %s' % (message, timestamp)).encode('utf-8')
+    digestmod = hashlib.sha1
+
+    # generate our hmac signature
+    sig = hmac.HMAC(key, msg, digestmod).hexdigest()
     if current_user == blog.author:
         if blog is None:
             abort(404)
         else:
             author = blog.author
-            timestamp = utc2local(blog.timestamp).strftime('%Y-%m-%d')
-            return render_template('blog.html', author=author, blog=blog, timestamp=timestamp)
+            timestam = utc2local(blog.timestamp).strftime('%Y-%m-%d')
+            return render_template('blog.html', author=author, blog=blog, timestamp=timestam, message=message,
+                                   t=timestamp, sig=sig, key=DISQUS_PUBLIC_KEY)
     else:
         if blog is None:
             abort(404)
@@ -119,7 +146,7 @@ def edit_blog():
     body = request.form.get('body', None)
     blog = Text.query.filter_by(id=id).first()
     txt = request.form.get('txt', None)
-    txt=strip_tags(txt)
+    txt = strip_tags(txt)
     if current_user.id != blog.author.id:
         abort(403)
     if blog is None:
@@ -380,14 +407,18 @@ def get_m_num():
 
 @main.route('/test')
 def ffff():
-    u = User.query.all()
-    user = random.choice(u)
-    uuu = User.query.filter_by(id=current_user.id).first()
-    message = Message(user=uuu, sel=user.id, do='follow')
-    f = Follow(follower=user, followed=uuu)
-    db.session.add(f)
-    db.session.add(message)
-    return 'success'
+    url = 'http://api.duoshuo.com/users/import.json'
+    user = User.query.filter_by(id=current_user.id).first()
+    data = {
+        'short_name': 'suarezlin',
+        'secret': '4fdf1522fe00ce82b6c00505f1eb903e',
+    }
+    u = [{'user_key': user.id, 'name': user.name, 'avatar_url': user.real_avatar, 'url': '/user/' + str(user.id),
+          'email': user.email}]
+    print(u)
+    s = requests.post(url, data=data)
+    print(s.json())
+    return str(s.json())
 
 
 def gen_rnd_filename():
@@ -427,3 +458,12 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
+
+# @main.route('/api_test')
+# @login_required
+# def api_test():
+#     return render_template('api.html')
+#
+# @main.route('/api_test_page')
+# @login_required
+# def api():
