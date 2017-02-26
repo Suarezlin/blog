@@ -188,7 +188,10 @@ def ava():
     fname = avatar.filename
     UPLOAD_FOLDER = os.getcwd() + '/app/static/avatar/'
     if user.real_avatar is not None:
-        os.remove(UPLOAD_FOLDER + user.real_avatar)
+        try:
+            os.remove(UPLOAD_FOLDER + user.real_avatar)
+        except:
+            pass
     avatar.save('{}{}_{}'.format(UPLOAD_FOLDER, current_user.email, fname))
     user.real_avatar = '{}_{}'.format(current_user.email, fname)
     db.session.add(user)
