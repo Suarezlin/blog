@@ -114,7 +114,7 @@ def get_blog(id):
             abort(404)
         else:
             author = blog.author
-            timestamp = utc2local(blog.timestamp).strftime('%Y-%m-%d')
+            timestam = utc2local(blog.timestamp).strftime('%Y-%m-%d')
             return render_template('otherblog.html', author=author, blog=blog, timestamp=timestam,message=message,
                                    t=timestamp, sig=sig, key=DISQUS_PUBLIC_KEY)
 
