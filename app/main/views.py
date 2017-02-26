@@ -88,7 +88,7 @@ def get_blog(id):
         'username': current_user.name,
         'email': current_user.email,
         'url': 'http://blog.suarezlin.com/' + current_user.email,
-        'avatar': 'http://blog.suarezlin.com/static/avatar/'+current_user.real_avatar
+        'avatar': 'http://blog.suarezlin.com/static/avatar/' + current_user.real_avatar
     })
     print('http://localhost:5000/static/avatar/1031312670@qq.com.jpg')
     message = base64.b64encode(data.encode('utf-8')).decode()
@@ -193,15 +193,29 @@ def ava():
         except:
             pass
     avatar.save('{}{}_{}'.format(UPLOAD_FOLDER, current_user.email, fname))
+    img = Image.open('{}{}_{}'.format(UPLOAD_FOLDER, current_user.email, fname))
+    size = img.size
+    num_1 = int(size[0] / 350)
+    num_2=int(size[1]/350)
+    num=max(num_1,num_2)
+    x0 = num*(int(request.form.get('x', None)))
+    y0 = num*(int(request.form.get('y', None)))
+    if x0<0:
+        x0=0
+    elif y0<0:
+        y0=0
+    x1 = x0 + num*(int(request.form.get('w', None)))
+    y1 = y0 + num*(int(request.form.get('h', None)))
+    region = (x0, y0, x1, y1)
+
+    # 裁切图片
+    cropImg = img.crop(region)
+
+    # 保存裁切后的图片
+    cropImg.save('{}{}_{}'.format(UPLOAD_FOLDER, current_user.email, fname))
     user.real_avatar = '{}_{}'.format(current_user.email, fname)
     db.session.add(user)
     db.session.commit()
-    img = Image.open(UPLOAD_FOLDER + user.real_avatar)
-    (x, y) = img.size
-    x_s = 120
-    y_s = int(y * x_s / x)
-    new_img = img.resize((x_s, y_s), Image.ANTIALIAS)  # w代表宽度，h代表高度，最后一个参数指 定采用的算法
-    new_img.save(UPLOAD_FOLDER + user.real_avatar, quality=100)
     return jsonify(result='success')
 
 
