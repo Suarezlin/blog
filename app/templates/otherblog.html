@@ -34,6 +34,31 @@
                     <div class="panel-body">{{ blog.body |safe }}</div>
                     <div class="panel-footer"><span style="font-size: xx-small;">创建于 {{ timestamp }}</span></div>
                 </div>
+                <div id="disqus_thread"></div>
+                <script>
+                    /**
+                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                    /*
+                     var disqus_config = function () {
+                     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                     };
+                     */
+                    var disqus_config = function () {
+                        // The generated payload which authenticates users with Disqus
+                        this.page.remote_auth_s3 = '{{ message }} {{ sig }} {{ t }}';
+                        this.page.api_key = '{{ key }}';
+                    };
+                    (function () { // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+                        s.src = '//suarezlin-blog.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+                    powered by Disqus.</a></noscript>
             </div>
             <div class="col-md-3 hidden-xs">
                 <div class="panel panel-default info">
@@ -41,7 +66,7 @@
                         <div class="media">
                             <div class="media-left">
                                 <a href="" id="pic">
-                                    <img class="media-object img-rounded" src="http://localhost:5000/static/wait.gif"
+                                    <img class="media-object img-rounded" src="/static/wait.gif"
                                          alt=""
                                          style="width: 66px" id="ava">
                                 </a>
@@ -96,4 +121,5 @@
             </div>
         </div>
     </div>
+    <script id="dsq-count-scr" src="//suarezlin-blog.disqus.com/count.js" async></script>
 {% endblock %}
