@@ -12,6 +12,7 @@ import base64
 import hashlib
 import hmac
 import simplejson
+from PIL import Image
 
 
 def strip_tags(html):
@@ -86,10 +87,10 @@ def get_blog(id):
         'id': current_user.id,
         'username': current_user.name,
         'email': current_user.email,
-        # 'avatar': 'http://127.0.0.1:5000/static/avatar/' + current_user.real_avatar,
-        # 'url': '/user/' + str(current_user.id)
+        'url': 'http://blog.suarezlin.com/' + current_user.email,
+        'avatar': 'http://blog.suarezlin.com/static/avatar/'+current_user.real_avatar
     })
-    print(len('http://127.0.0.1:5000/static/avatar/' + current_user.real_avatar))
+    print('http://localhost:5000/static/avatar/1031312670@qq.com.jpg')
     message = base64.b64encode(data.encode('utf-8')).decode()
     # generate a timestamp for signing the message
     timestamp = int(time.time())
@@ -192,6 +193,12 @@ def ava():
     user.real_avatar = '{}_{}'.format(current_user.email, fname)
     db.session.add(user)
     db.session.commit()
+    img = Image.open(UPLOAD_FOLDER + user.real_avatar)
+    (x, y) = img.size
+    x_s = 120
+    y_s = int(y * x_s / x)
+    new_img = img.resize((x_s, y_s), Image.ANTIALIAS)  # w代表宽度，h代表高度，最后一个参数指 定采用的算法
+    new_img.save(UPLOAD_FOLDER + user.real_avatar, quality=100)
     return jsonify(result='success')
 
 

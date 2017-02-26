@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block head %}
+    <style type="text/css">
+        .info {
+            position: fixed;
+            width: 262.5px;
+        }
+
+    </style>
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
