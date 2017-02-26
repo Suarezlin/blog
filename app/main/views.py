@@ -115,7 +115,8 @@ def get_blog(id):
         else:
             author = blog.author
             timestamp = utc2local(blog.timestamp).strftime('%Y-%m-%d')
-            return render_template('otherblog.html', author=author, blog=blog, timestamp=timestamp)
+            return render_template('otherblog.html', author=author, blog=blog, timestamp=timestamp,message=message,
+                                   t=timestamp, sig=sig, key=DISQUS_PUBLIC_KEY)
 
 
 @main.route('/delete', methods=['POST'])
