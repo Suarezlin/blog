@@ -180,7 +180,7 @@ class Role(db.Model):
 
 class Text(db.Model):
     __tablename__ = 'texts'
-    __searchable__ = ['title', 'body','author']
+    __searchable__ = ['title', 'body']
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
