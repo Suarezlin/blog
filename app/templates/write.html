@@ -6,6 +6,13 @@
             width: 262.5px;
         }
 
+        .info1 {
+            position: fixed;
+            right: 7px;
+            left: 8px;
+            top: 55px;
+        }
+
         #editor {
             overflow: scroll;
             max-height: 300px
@@ -178,7 +185,7 @@
         $(function () {
             $('.btn-primary').click(function () {
                 var data1 = CKEDITOR.instances.editor1.getData();
-                var txt = trimHtml(data1, {limit:200,preserveTags:true}).html;
+                var txt = trimHtml(data1, {limit: 200, preserveTags: true}).html;
                 console.log(data1);
                 $.post($SCRIPT_ROOT + '/write_blog', {
                     title: $('#title').val(),
