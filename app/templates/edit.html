@@ -6,6 +6,13 @@
             width: 262.5px;
         }
 
+        .info1 {
+            position: fixed;
+            right: 7px;
+            left: 8px;
+            top: 55px;
+        }
+
         #editor {
             overflow: scroll;
             max-height: 300px
@@ -163,12 +170,23 @@
                 $('#da').text(data.time);
                 $('#ava').attr('src', data.avatar)
             });
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ current_user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e1').text(data.email);
+                $('#na1').text(data.name);
+                $('#add1').text(data.address);
+                $('#in1').text(data.about_me);
+                $('#da1').text(data.time);
+                $('#ava1').attr('src', data.avatar)
+            });
         });
         $(function () {
             $('#title').val('{{ blog.title }}');
             $('.btn-primary').click(function () {
                 var data1 = CKEDITOR.instances.editor1.getData();
-                var txt = trimHtml(data1, {limit:200,preserveTags:true}).html;
+                var txt = trimHtml(data1, {limit: 200, preserveTags: true}).html;
                 console.log(data1);
                 $.post($SCRIPT_ROOT + '/edit_blog', {
                     id:{{ blog.id }},
@@ -212,7 +230,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 hidden-xs">
+            <div class="col-md-3 visible-lg visible-md">
                 <div class="panel panel-default info">
                     <div class="panel-body">
                         <div class="media">
@@ -258,10 +276,43 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 visible-xs">
-                <div class="panel panel-default">
-                    <div class="panel-body text-center">{{ user.email }}</div>
-                    <button type="button" class="btn btn-primary btn-block">提交</button>
+            <div class="col-md-3 visible-xs visible-sm">
+                <div class="panel panel-default info1">
+                    <div class="panel-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <a data-toggle="modal" data-target="#avatar_modal">
+                                                <img class="media-object img-rounded"
+                                                     src="http://localhost:5000/static/wait.gif"
+                                                     alt=""
+                                                     style="width: 45px" id="ava1">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading" id="na1"></h4>
+                                            <h4 class="media-heading">
+                                                <small id="e1"></small>
+                                            </h4>
+                                            {#                                            <small id="in1"></small>#}
+                                        </div>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <button type="button" class="btn btn-primary btn-xs">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        {#                        <button type="button" class="btn btn-primary btn-sm btn-block" id="b1">写博客</button>#}
+                        {#                        <button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal"#}
+                        {#                                data-target="#myModal">#}
+                        {#                            编辑资料#}
+                        {#                        </button>#}
+                        {#                        <button type="button" class="btn btn-danger btn-sm btn-block" id="b3">注销</button>#}
+                    </div>
                 </div>
             </div>
         </div>
