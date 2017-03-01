@@ -34,6 +34,8 @@
                 $('#in1').text(data.about_me);
                 $('#da1').text(data.time);
                 $('#ava1').attr('src', data.avatar);
+                $('#111').text(data.followed);
+                $('#222').text(data.followers);
                 if (data.following == '1') {
                     $('#follow1').hide();
                     $('#cancelfollow1').show();
@@ -266,12 +268,12 @@
                             <h4>
                                 <small>关注了</small>
                             </h4>
-                            <strong style="font-size: x-large"><a href="#" t="following" id="11"></a></strong></div>
+                            <strong style="font-size: x-large"><a href="#" t="following" id="111"></a></strong></div>
                         <div style="float: right;text-align: center;width:50%">
                             <h4>
                                 <small>关注者</small>
                             </h4>
-                            <strong style="font-size: x-large"><a href="#" t="followers" id="22"></a></strong><br><br>
+                            <strong style="font-size: x-large"><a href="#" t="followers" id="222"></a></strong><br><br>
                         </div>
                         <div id="is_follow">
                             <button type="button" class="btn btn-danger btn-block" id="cancelfollow1">取消关注</button>
