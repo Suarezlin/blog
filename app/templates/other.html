@@ -11,7 +11,7 @@
                 $('#add').text(data.address);
                 $('#in').text(data.about_me);
                 $('#da').text(data.time);
-                $('#ava').attr('src', data.avatar)
+                $('#ava').attr('src', data.avatar);
                 $('#11').text(data.followed);
                 $('#22').text(data.followers);
                 if (data.following == '1') {
@@ -20,6 +20,26 @@
                 } else {
                     $('#follow').show();
                     $('#cancelfollow').hide();
+                }
+            });
+        });
+        $(function () {
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e1').text(data.email);
+                $('#na1').text(data.name);
+                $('#add1').text(data.address);
+                $('#in1').text(data.about_me);
+                $('#da1').text(data.time);
+                $('#ava1').attr('src', data.avatar);
+                if (data.following == '1') {
+                    $('#follow1').hide();
+                    $('#cancelfollow1').show();
+                } else {
+                    $('#follow1').show();
+                    $('#cancelfollow1').hide();
                 }
             });
         });
@@ -42,6 +62,24 @@
                     $('#cancelfollow').show();
                 });
             });
+            $('#cancelfollow1').click(function () {
+                $.post($SCRIPT_ROOT + '/follow', {
+                    id:{{ user.id }},
+                    method: 'unfollow'
+                }, function (data, statu) {
+                    $('#cancelfollow1').hide();
+                    $('#follow1').show();
+                });
+            });
+            $('#follow1').click(function () {
+                $.post($SCRIPT_ROOT + '/follow', {
+                    id:{{ user.id }},
+                    method: 'follow'
+                }, function (data, statu) {
+                    $('#follow1').hide();
+                    $('#cancelfollow1').show();
+                });
+            });
         });
         $(function () {
             $.post($SCRIPT_ROOT + '/get_this_blog', {
@@ -52,7 +90,7 @@
                 var posts = new Array();
                 var indexs = new Array();
                 for (var i in data.title) {
-                    posts.push('<div><h5><i><h2>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h2></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
+                    posts.push('<div><h4>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h4><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
                 }
                 for (var j in posts) {
                     body.append(posts[j]);
@@ -75,7 +113,7 @@
                     var body = $('#blog_body');
                     var posts = new Array();
                     for (var i in data.title) {
-                        posts.push('<div><h5><i><h2>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h2></i></h5><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
+                        posts.push('<div><h4>' + data.title[i] + '&mdash;&mdash;' + data.time[i] + '</h4><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span><hr>');
                     }
                     for (var j in posts) {
                         body.append(posts[j]);
@@ -97,7 +135,7 @@
                     var body = $('#following_body');
                     var posts = new Array();
                     for (var i in data.name) {
-                        posts.push('<div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.avatar[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="http://localhost:5000/user/' + data.email[i] + '">个人页面</a></div> </div> </div><hr>');
+                        posts.push('<div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.avatar[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="/user/' + data.email[i] + '">个人页面</a></div> </div> </div><hr>');
                     }
                     for (var j in posts) {
                         body.append(posts[j]);
@@ -119,7 +157,7 @@
                     var body = $('#followers_body');
                     var posts = new Array();
                     for (var i in data.name) {
-                        posts.push('<div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.avatar[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="http://localhost:5000/user/'+data.email[i] + '">个人页面</a></div> </div> </div><hr>');
+                        posts.push('<div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.avatar[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="/user/'+data.email[i] + '">个人页面</a></div> </div> </div><hr>');
                     }
                     for (var j in posts) {
                         body.append(posts[j]);
@@ -134,7 +172,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-1" style="opacity: 0"></div>
-            <div class="col-md-10">
+            <div class="col-md-10 visible-lg visible-md">
                 <div class="panel panel-default">
                     <div class="panel-body"><br>
                         <div class="media">
@@ -185,9 +223,63 @@
                     <div style="background-color: #96A1A9;width: 943px;height: 120px;position: absolute;top: 0px;z-index: 1"></div>
                 </div>
             </div>
+            <div class="col-md-10 visible-sm visible-xs">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object img-rounded" src="/static/wait.gif"
+                                     style="height: 100px;border: solid 5px #FFFFFF"
+                                     id="ava1">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading"><span id="na1" style="font-size: 18px"></span>
+                                    <small id="e1"></small>
+                                </h3>
+                                <div>
+                                    <span class="glyphicon glyphicon-user"
+                                          aria-hidden="true" style="font-size: 8px"></span>
+                                    <small id="in1" style="font-size: 8px"></small>
+                                </div>
+                                <div>
+                                    <span class="glyphicon glyphicon-home"
+                                          aria-hidden="true" style="font-size: 8px"></span>
+                                    <small id="add1" style="font-size: 8px"></small>
+                                </div>
+                                <div>
+                                    <span class="glyphicon glyphicon-calendar"
+                                          aria-hidden="true" style="font-size: 8px"></span>
+                                    <small id="da1" style="font-size: 8px"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-1" style="opacity: 0"></div>
         </div>
         <div class="row">
+            <div class="col-md-3 visible-sm visible-xs">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div style="float: left;text-align: center;width:50%;border-right:1px solid #f0f2f7">
+                            <h4>
+                                <small>关注了</small>
+                            </h4>
+                            <strong style="font-size: x-large"><a href="#" t="following" id="11"></a></strong></div>
+                        <div style="float: right;text-align: center;width:50%">
+                            <h4>
+                                <small>关注者</small>
+                            </h4>
+                            <strong style="font-size: x-large"><a href="#" t="followers" id="22"></a></strong><br><br>
+                        </div>
+                        <div id="is_follow">
+                            <button type="button" class="btn btn-danger btn-block" id="cancelfollow1">取消关注</button>
+                            <button type="button" class="btn btn-primary btn-block" id="follow1">关注</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-1">
             </div>
             <div class="col-md-7">
@@ -207,7 +299,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 visible-lg visible-md">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div style="float: left;text-align: center;width:50%;border-right:1px solid #f0f2f7">

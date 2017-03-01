@@ -6,6 +6,13 @@
             width: 262.5px;
         }
 
+        .info1 {
+            position: fixed;
+            right: 7px;
+            left: 8px;
+            top: 55px;
+        }
+
         .fl {
             float: left;
         }
@@ -56,6 +63,25 @@
             overflow: hidden;
         }
 
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+        }
+
+        .btn-circle.btn-lg {
+            width: 50px;
+            height: 50px;
+            padding: 10px 16px;
+            font-size: 18px;
+            line-height: 1.33;
+            border-radius: 25px;
+        }
+
     </style>
     <link href="http://cdn.bootcss.com/jquery-jcrop/0.9.12/css/jquery.Jcrop.css" rel="stylesheet">
     <script type=text/javascript>
@@ -76,7 +102,23 @@
             });
         });
         $(function () {
+            $.post($SCRIPT_ROOT + '/getinfo', {
+                id:{{ current_user.id }}
+            }, function (data, statu) {
+                console.log(data.email);
+                $('#e1').text(data.email);
+                $('#na1').text(data.name);
+                $('#add1').text(data.address);
+                $('#in1').text(data.about_me);
+                $('#da1').text(data.time);
+                $('#ava1').attr('src', data.avatar)
+            });
+        });
+        $(function () {
             $('#b1').click(function () {
+                window.location.href = $SCRIPT_ROOT + '/write'
+            });
+            $('#bu').click(function () {
                 window.location.href = $SCRIPT_ROOT + '/write'
             });
             $('#b2').click(function () {
@@ -132,7 +174,7 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-9 visible-md visible-lg">
                 {% for post in posts %}
                     <div class="well" id="{{ post.id }}" style="height: 335px;background-color: #fff">
                         <h1>{{ post.title }}</h1>
@@ -158,7 +200,7 @@
                                     </div>
                                     <div class="col-md-5"
                                          style="font-size: xx-small;position: relative;top: 20px;left: 405px;">
-                                        创建于 {{ timestamp[loop.index0] }}
+                                        创建于:{{ timestamp[loop.index0] }}
                                     </div>
                                 </div>
                             </div>
@@ -166,12 +208,42 @@
                     </div>
                 {% endfor %}
                 {% if len == 0 %}
-                    <div class="panel panel-default">
-                        <div class="panel-body">还没有写过博客哦</div>
+                    <div class="well">
+                        还没有写过博客哦
                     </div>
                 {% endif %}
             </div>
-            <div class="col-md-3 hidden-xs">
+            <div class="col-md=9 visible-xs visible-sm" style="padding-top: 70px">
+                {% for post in posts %}
+                    <div class="well" id="{{ post.id }}" style="background-color: #fff">
+                        <h3>{{ post.title }}</h3>
+                        <small>创建于:{{ timestamp[loop.index0] }}</small>
+                        <div style="">
+                            <div style="font-size: 18px;padding-top: 10px;padding-bottom: 8px">{{ post.txt|safe }}</div>
+                        </div>
+                        <div>
+                            <a class="btn btn-primary btn-xs"
+                               href="/blog/{{ post.id }}"
+                               role="button"
+                               target="_blank" style="">全部</a>
+                            <button type="button" class="btn btn-success btn-xs" aa="edit"
+                                    style=""
+                                    blog="{{ post.id }}">编辑
+                            </button>
+                            <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}"
+                                    style="">
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if len == 0 %}
+                    <div class="well">
+                        还没有写过博客哦
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-3 visible-md visible-lg">
                 <div class="panel panel-default info">
                     <div class="panel-body">
                         <div class="media">
@@ -222,11 +294,50 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 visible-xs">
-                <div class="panel panel-default">
-                    <div class="panel-body text-center">{{ user.email }}</div>
-                    <button type="button" class="btn btn-primary btn-sm btn-block" id="b2">写博客</button>
-                    <button type="button" class="btn btn-danger btn-sm btn-block" id="b4">注销</button>
+            <div class="col-md-3 visible-xs visible-sm">
+                <div class="panel panel-default info1">
+                    <div class="panel-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <a data-toggle="modal" data-target="#avatar_modal">
+                                                <img class="media-object img-rounded"
+                                                     src="http://localhost:5000/static/wait.gif"
+                                                     alt=""
+                                                     style="width: 45px" id="ava1">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading" id="na1"></h4>
+                                            <h4 class="media-heading">
+                                                <small id="e1"></small>
+                                            </h4>
+                                            {#                                            <small id="in1"></small>#}
+                                        </div>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <button type="button" class="btn btn-success btn-xs btn-block" data-toggle="modal"
+                                            data-target="#myModal">
+                                        编辑资料
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs btn-block" id="b3">注销</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-circle btn-lg" id="bu"
+                                style="position: fixed;bottom:20px;right:15px;"><i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                        {#                        <button type="button" class="btn btn-primary btn-sm btn-block" id="b1">写博客</button>#}
+                        {#                        <button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal"#}
+                        {#                                data-target="#myModal">#}
+                        {#                            编辑资料#}
+                        {#                        </button>#}
+                        {#                        <button type="button" class="btn btn-danger btn-sm btn-block" id="b3">注销</button>#}
+                    </div>
                 </div>
             </div>
         </div>
