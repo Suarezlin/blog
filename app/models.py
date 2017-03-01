@@ -7,6 +7,7 @@ from . import db
 from . import login_manager
 from datetime import datetime
 import hashlib
+import flask_whooshalchemy as whooshalchemy
 
 
 class Follow(db.Model):
@@ -18,6 +19,7 @@ class Follow(db.Model):
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
+    __searchable__ = ['name', 'email']
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -49,7 +51,8 @@ class User(UserMixin, db.Model):
     followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
                                 backref=db.backref('followed', lazy='joined'), lazy='dynamic',
                                 cascade='all,delete-orphan')
-    messages=db.relationship('Message',backref='user')
+    messages = db.relationship('Message', backref='user')
+
     def follow(self, user):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
@@ -177,6 +180,7 @@ class Role(db.Model):
 
 class Text(db.Model):
     __tablename__ = 'texts'
+    __searchable__ = ['title', 'body','author']
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -214,17 +218,23 @@ class Comment(db.Model):
 
 
 class Message(db.Model):
-    __tablename__='messages'
-    id=db.Column(db.Integer,primary_key=True)
-    user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
-    blog_id=db.Column(db.Integer, db.ForeignKey('texts.id'))
-    comment_id=db.Column(db.Integer, db.ForeignKey('comments.id'))
-    sel=db.Column(db.Integer)
-    do=db.Column(db.Text)
-    t=db.Column(db.Text)
-    is_read=db.Column(db.Boolean,default=False)
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('texts.id'))
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
+    sel = db.Column(db.Integer)
+    do = db.Column(db.Text)
+    t = db.Column(db.Text)
+    is_read = db.Column(db.Boolean, default=False)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+from manage import app
+
+whooshalchemy.whoosh_index(app, User)
+whooshalchemy.whoosh_index(app, Text)

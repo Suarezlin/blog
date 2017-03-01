@@ -14,6 +14,8 @@ class Config:
     MAIL_PASSWORD = 'Lzn19971012'
     FLASKY_MAIL_SUBJECT_PREFIX = '[Suarezlin]'
     FLASKY_MAIL_SENDER = 'Suarezlin <17791652478@163.com>'
+    WHOOSH_BASE = os.path.join(basedir, 'search.db')
+
     @staticmethod
     def init_app(app):
         pass

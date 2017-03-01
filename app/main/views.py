@@ -115,7 +115,7 @@ def get_blog(id):
         else:
             author = blog.author
             timestam = utc2local(blog.timestamp).strftime('%Y-%m-%d')
-            return render_template('otherblog.html', author=author, blog=blog, timestamp=timestam,message=message,
+            return render_template('otherblog.html', author=author, blog=blog, timestamp=timestam, message=message,
                                    t=timestamp, sig=sig, key=DISQUS_PUBLIC_KEY)
 
 
@@ -197,16 +197,16 @@ def ava():
     img = Image.open('{}{}_{}'.format(UPLOAD_FOLDER, current_user.email, fname))
     size = img.size
     num_1 = int(size[0] / 350)
-    num_2=int(size[1]/350)
-    num=max(num_1,num_2)
-    x0 = num*(int(request.form.get('x', None)))
-    y0 = num*(int(request.form.get('y', None)))
-    if x0<0:
-        x0=0
-    elif y0<0:
-        y0=0
-    x1 = x0 + num*(int(request.form.get('w', None)))
-    y1 = y0 + num*(int(request.form.get('h', None)))
+    num_2 = int(size[1] / 350)
+    num = max(num_1, num_2)
+    x0 = num * (int(request.form.get('x', None)))
+    y0 = num * (int(request.form.get('y', None)))
+    if x0 < 0:
+        x0 = 0
+    elif y0 < 0:
+        y0 = 0
+    x1 = x0 + num * (int(request.form.get('w', None)))
+    y1 = y0 + num * (int(request.form.get('h', None)))
     region = (x0, y0, x1, y1)
 
     # 裁切图片
@@ -484,11 +484,37 @@ def ckupload():
     response.headers["Content-Type"] = "text/html"
     return response
 
-# @main.route('/api_test')
-# @login_required
-# def api_test():
-#     return render_template('api.html')
-#
-# @main.route('/api_test_page')
-# @login_required
-# def api():
+
+@main.route('/search', methods=['POST'])
+def search_word():
+    key_word = request.form.get('key', None)
+    text = Text.query.whoosh_search(key_word).all()
+    user = User.query.whoosh_search(key_word).all()
+    title = []
+    author = []
+    txt = []
+    ava = []
+    name = []
+    email = []
+    id = []
+    intro = []
+    blog_num = []
+    follower_num = []
+    url = []
+    if text != []:
+        for it in text:
+            title.append(it.title)
+            author.append(it.author.name)
+            txt.append(it.txt)
+            url.append('/blog/' + str(it.id))
+    if user != []:
+        for it in user:
+            ava.append(it.real_avatar)
+            name.append(it.name)
+            email.append(it.email)
+            id.append(it.id)
+            intro.append(it.about_me)
+            blog_num.append(len(it.texts.order_by(Text.timestamp.desc()).all()))
+            follower_num.append(len(it.followers.order_by(Follow.timestamp.desc()).all()))
+    return jsonify(title=title, author=author, txt=txt, name=name, ava=ava, email=email, id=id, intro=intro,
+                   blog_num=blog_num, follower_num=follower_num, url=url)

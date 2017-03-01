@@ -21,29 +21,65 @@
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
     <style>
-{#        article{#}
-{#            background-color: #fff;#}
-{#            margin-top: 10px;#}
-{#            margin-bottom: 10px;#}
-{#            border-left-width: 20px;#}
-{#            padding-left: 20px;#}
-{#            border-top-width: 10px;#}
-{#            border-right-width: 20px;#}
-{#            border-bottom-width: 20px;#}
-{#            padding-top: 20px;#}
-{#        }#}
+        {#        article{#}
+        {#            background-color: #fff;#}
+        {#            margin-top: 10px;#}
+        {#            margin-bottom: 10px;#}
+        {#            border-left-width: 20px;#}
+        {#            padding-left: 20px;#}
+        {#            border-top-width: 10px;#}
+        {#            border-right-width: 20px;#}
+        {#            border-bottom-width: 20px;#}
+        {#            padding-top: 20px;#}
+        {#        }#}
     </style>
     <script>
         $(function () {
             $.post($SCRIPT_ROOT + '/get_m_num', {
                 id:{{ current_user.id }}
             }, function (data, statu) {
-                num=data.num;
-                if(num >0){
+                num = data.num;
+                if (num > 0) {
                     $('#num').text(num);
                 }
             });
-        })
+            $('#search').click(function () {
+                $.post($SCRIPT_ROOT + '/search', {
+                    key: $('#search_input').val()
+                }, function (data, statu) {
+                    var users = new Array();
+                    var posts = new Array();
+                    if (data.name.length != 0) {
+                        for (var i in data.name) {
+                            users.push('<div class="well"><div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.ava[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="/user/' + data.email[i] + '">个人页面</a></div> </div> </div></div>');
+                        }
+                    }
+                    else {
+                        users.push('<p>无结果</p>')
+                    }
+                    if (data.title.length != 0) {
+                        for (var i in data.title) {
+                            posts.push('<div class="well"><div><h4>' + data.title[i] + '</h4><small>' + data.author[i] + '</small><div>' + data.txt[i] + '</div></div><span class="label label-default"><a href="' + data.url[i] + '"><font color="#fff">查看全文请点击此链接</font></a></span></div>');
+                        }
+                    }
+                    else {
+                        posts.push('<p>无结果</p>')
+                    }
+                    u=$('.user');
+                    b=$('.blog');
+                    u.empty();
+                    b.empty();
+                    for (var i in users){
+                        u.append(users[i]);
+                    }
+                    for(var i in posts){
+                        b.append(posts[i]);
+                    }
+                    $('#searchModal').modal();
+                });
+            })
+        });
+
     </script>
     {% block head %}
     {% endblock %}
@@ -61,11 +97,20 @@
     </div>
     <div class="collapse navbar-collapse navbar-responsive-collapse">
         <ul class="nav navbar-nav">
-            <li><a href="{{ url_for('main.index') }}"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 博客</a></li>
-            <li><a href="/message"><span class="glyphicon glyphicon-comment" aria-hidden="true"> </span>消息<span class="badge" id="num"></span></a></li>
+            <li><a href="{{ url_for('main.index') }}"><span class="glyphicon glyphicon-list-alt"
+                                                            aria-hidden="true"></span> 博客</a></li>
+            <li><a href="/message"><span class="glyphicon glyphicon-comment" aria-hidden="true"> </span>消息<span
+                    class="badge" id="num"></span></a></li>
             <li><a href="/discover"><span class="glyphicon glyphicon-search" aria-hidden="true"> </span>发现</a></li>
-            <li><a href="/user/{{ current_user.email }}"><span class="glyphicon glyphicon-user" aria-hidden="true"> </span>我的资料</a></li>
+            <li><a href="/user/{{ current_user.email }}"><span class="glyphicon glyphicon-user"
+                                                               aria-hidden="true"> </span>我的资料</a></li>
         </ul>
+        <div class="navbar-form navbar-right">
+            <div class="form-group">
+                <input type="text" class="form-control" id="search_input" placeholder="请输入关键词"/>
+            </div>
+            <button type="submit" id="search" class="btn btn-default" style="margin-right: 8px">搜索</button>
+        </div>
     </div>
 
 </div>
@@ -73,5 +118,24 @@
 {% block body %}
 {% endblock %}
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">搜索结果</h4>
+            </div>
+            <div class="modal-body">
+                <h2>用户</h2>
+                <div class="user"></div>
+                <h2>文章</h2>
+                <div class="blog"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
