@@ -51,7 +51,7 @@
                     var posts = new Array();
                     if (data.name.length != 0) {
                         for (var i in data.name) {
-                            users.push('<div class="well"><div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="' + data.ava[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="/user/' + data.email[i] + '">个人页面</a></div> </div> </div></div>');
+                            users.push('<div class="well"><div class="media" style="margin-top: 10px;margin-bottom: 10px;"> <div class="media-left"> <a href="#"> <img class="media-object" src="/static/avatar/' + data.ava[i] + '" width="80px"> </a> </div> <div class="media-body"> <h4 class="media-heading"><span style="font-size: x-large">' + data.name[i] + '&nbsp;</span><small>' + data.email[i] + '</small></h4> <span style="font-size: small">' + data.intro[i] + '</span> <div><h6><small>' + data.blog_num[i] + ' 文章 · ' + data.follower_num[i] + ' 关注者</small></h6></div> <div style="float: right"><a type="button" class="btn btn-primary" role="button" target="_blank" href="/user/' + data.email[i] + '">个人页面</a></div> </div> </div></div>');
                         }
                     }
                     else {
