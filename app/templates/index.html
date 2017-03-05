@@ -181,30 +181,22 @@
                         <div style="height: 200px">
                             <div style="font-size: 18px;padding-top: 40px;">{{ post.txt|safe }}</div>
                         </div>
-                        <div>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <a class="btn btn-primary btn-xs"
-                                           href="/blog/{{ post.id }}"
-                                           role="button"
-                                           target="_blank" style="position: relative;top: -280px;left: 765px;">全部</a>
-                                        <button type="button" class="btn btn-success btn-xs" aa="edit"
-                                                style="position: relative;top: -250px;left: 725px;"
-                                                blog="{{ post.id }}">编辑
-                                        </button>
-                                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}"
-                                                style="position: relative;top: -220px;left: 685px;">
-                                            删除
-                                        </button>
-                                    </div>
-                                    <div class="col-md-5"
-                                         style="font-size: xx-small;position: relative;top: 20px;left: 405px;">
-                                        创建于:{{ timestamp[loop.index0] }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <a class="btn btn-primary btn-xs"
+                           href="/blog/{{ post.id }}"
+                           role="button"
+                           target="_blank" style="position: absolute;top:10px;right: 25px;">全部</a>
+                        <button type="button" class="btn btn-success btn-xs" aa="edit"
+                                style="position: absolute;top:40px;right: 25px;"
+                                blog="{{ post.id }}">编辑
+                        </button>
+                        <button class="btn btn-danger btn-xs del" type="button" blog="{{ post.id }}"
+                                style="position: absolute;top:70px;right: 25px;">
+                            删除
+                        </button>
+                    </div>
+                    <div
+                            style="font-size: xx-small;position: absolute;bottom:20px;right:25px;">
+                        创建于:{{ timestamp[loop.index0] }}
                     </div>
                 {% endfor %}
                 {% if len == 0 %}
