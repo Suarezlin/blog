@@ -128,7 +128,7 @@
                 $blogs_num = $blogs_num + 10;
                 var posts = new Array();
                 for (var i in data.id) {
-                    posts.push('<div class="well" style="height: 335px;background-color: #fff;position:relative"><h1>' + data.title[i] + '</h1> <div style="height: 200px"> <div style="font-size: 18px;padding-top: 40px;">' + data.txt[i] + '</div> </div> <a class="btn btn-primary btn-xs" href="/blog/' + data.id[i] + '"role="button" target="_blank" style="position: absolute;top:10px;right: 25px;">全部</a>  <div style="font-size: xx-small;position: absolute;bottom:55px;right:25px;">作者：' + data.author[i] + ' </div> </div>');
+                    posts.push('<div class="well" style="height: 335px;background-color: #fff;position:relative"><h1>' + data.title[i] + '</h1> <div style="height: 200px"> <div style="font-size: 18px;padding-top: 40px;">' + data.txt[i] + '</div> </div> <a class="btn btn-primary btn-xs" href="/blog/' + data.id[i] + '"role="button" target="_blank" style="position: absolute;top:10px;right: 10px;">全部</a>  <div style="font-size: xx-small;position: absolute;bottom:5px;right:10px;">作者：' + data.author[i] + ' </div> </div>');
                 }
                 for (var j in posts) {
                     body.append(posts[j]);
